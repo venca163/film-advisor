@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   "homepage": "https://github.com/venca163/film-advisor#readme",
   "dependencies": {
     "chalk": "^2.4.2",
-    "csfd-api": "^1.1.4",
+    "csfd-api": "github:venca163/csfd-api#vh",
     "express": "^4.16.4"
   },
   "devDependencies": {
