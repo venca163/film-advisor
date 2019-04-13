@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  </head>
+  <body>
+    <h2>https://www.csfd.cz/uzivatel/304220-venca163/</h2>
+    <div id="root">
+    </div>
+    <script type="text/babel">
+
+
+      class NameForm extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {value: ''};
+
+          this.handleChange = this.handleChange.bind(this);
+          this.handleSubmit = this.handleSubmit.bind(this);
+        }
+
+        handleChange(event) {
+          this.setState({value: event.target.value});
+        }
+      
+        handleSubmit(event) {
+
+          let userId
+          let userIdErr
+
+          try {
+            let url = this.state.value
+            let userId = url.split("/")[url.split("/").length - 1].split('-')[0]
+            if(userId === "") {
+              userId = url.split("/")[url.split("/").length - 2].split('-')[0]
+            }
+
+            if(isNaN(userId) || userId === undefined || userId === null || userId === "") {
+              userIdErr = 'Špatně zadaná URL'
+              this.setState({userId: userIdErr}) 
+            } else {
+              this.setState({userId: userId})
+              this.loadFilms()
+            }
+
+          } catch (err) {
+            userIdErr = 'Špatně zadaná URL'
+            this.setState({userId: userIdErr})
+          }
+          
+          event.preventDefault();
+        }
+        
+        loadFilms() {
+          const films = [{name: 'HP', genre: 'horror', score: 5}, {name: 'HP', genre: 'horror', score: 4}]
+          if(films.length === 0) {
+            console.log('Nenasli jsme pro vas zadne filmicky')
+          } else {
+            this.setState({filmName: films[0].name})
+            this.setState({filmGenre: films[0].genre})
+            this.setState({filmScore: films[0].score}) 
+          }
+        }
+
+        render() {
+          console.log("render")
+          return (
+            <div>
+              <label>
+                Name:
+                <input type="text" value={this.state.value} onChange={this.handleChange} />
+              </label>
+              <button onClick={this.handleSubmit}>Start</button>
+              <p>{this.state.userId}</p>
+              <p>{this.state.userIdErr}</p>
+              <hr />
+              <h3>{this.state.filmName}</h3>
+              <p>{this.state.filmGenre}</p>
+              <p>{this.state.filmScore}</p>
+              <button onClick={this.nextFilm}>Dalsi filmik</button>
+            </div>
+          );
+        }
+    }
+
+    ReactDOM.render(
+      <NameForm />,
+      document.getElementById('root')
+    );
+
+    </script>
+    
+  </body>
+  <script type="text/javascript" src="index.js"></script> 
+</html>
