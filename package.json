@@ -19,7 +19,12 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "csfd-api": "github:venca163/csfd-api#vh",
-    "express": "^4.16.4"
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "promise-async": "^0.2.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   },
   "devDependencies": {
     "jest": "^24.7.1"
