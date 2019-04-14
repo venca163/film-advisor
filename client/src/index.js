@@ -9,31 +9,72 @@ const showFilmView = () => {
             super(props)
             this.state = {}
 
-            this.nextFilm = this.nextFilm.bind(this)
+            this.loadFilms = this.loadFilms.bind(this)
         }
 
-        nextFilm (event) {  
-            const films = [{name: 'HP', genre: 'horror', score: 5}, {name: 'HP', genre: 'horror', score: 4}]
+        getFilms () {
+            fetch ("/api/get-movies")
+                .then (res => res.text())
+                .then (res => {
+                    try {
+                        let films = JSON.parse(res)
+                        this.setState ({ apiResponse: films })
+                    } catch (err) {throw err}
+                } 
+            )
+        }
+
+        componentWillMount () {
+            this.getFilms()
+        }
+
+        loadFilms (event) {  
+            let films = this.state.apiResponse
             if(films.length === 0) {
-                console.log('Nenasli jsme pro vas zadne filmicky')
+                const noFilmsFound = 'Nenasli jsme pro vas zadne filmicky'
+                this.setState({error: noFilmsFound})
             } else {
-                this.setState({
-                    filmName: films[0].name,
-                    filmGenre: films[0].genre,
-                    filmScore: films[0].score,
-                })
+                this.setState({films: films})
             }
             event.preventDefault()
         }
         
 
         render () {
+            if (this.state.error) {
+                return <p>{this.state.error}</p>
+            } 
+            if (!this.state.films) {
+                return <button className="next_film" onClick={this.loadFilms}>Dalsi film</button>
+            } 
+            if (!localStorage.getItem('lowestUnseenFilmId')) {
+                localStorage.setItem('lowestUnseenFilmId', 3)
+            }
+            let lowestUnseenFilmId = parseInt(localStorage.getItem('lowestUnseenFilmId'))
+            const top3Films = this.state.films.slice(lowestUnseenFilmId - 3, lowestUnseenFilmId)
+            localStorage.setItem('lowestUnseenFilmId', lowestUnseenFilmId + 3)
+            
+            if(top3Films.length === 0) {
+                localStorage.setItem('lowestUnseenFilmId', 3)
+                return (
+                    <div className='wrapper'>
+                        <p>To je prozatim vse</p>
+                        <button className="next_film" onClick={this.loadFilms}>Zacit znovu</button>
+                    </div>
+                )
+            }
+            const films = top3Films.map((film, key) =>
+            <ul key={key}>
+                    <li>Název: {film.name}</li>
+                    <li>Žánry: {film.genres}</li>
+                    <li>Hodnocení: {film.score}</li>
+                </ul>
+            )
+            
             return (
-                <div>
-                    <button onClick={this.nextFilm}>Dalsi film</button>
-                    <p>{this.state.filmName}</p>
-                    <p>{this.state.filmGenre}</p>
-                    <p>{this.state.filmScore}</p>
+                <div className='wrapper'>
+                    <button className="next_film" onClick={this.loadFilms}>Dalsi film</button>
+                    <div className='film_wrapper'> {films} </div>
                 </div>
             )
         }
@@ -80,7 +121,7 @@ if (localStorage.getItem(getLSuserIdName()) === null) {
                         userIdErr: null,
                     })
                     this.setState({showResults: true})
-                    loadFilms()
+                    showFilmView()
                 }
 
             } catch (err) {
