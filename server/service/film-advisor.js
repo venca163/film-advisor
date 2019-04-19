@@ -1,8 +1,8 @@
 const _ = require('lodash')
 const async = require('promise-async')
 
-const CsfdService = require('./csfd-service')
-const TmdbService = require('./tmdb-service')
+const CsfdService = require('../movie-api/csfd-api')
+const TmdbService = require('../movie-api/tmdb-api')
 
 class FilmAdvisor {
 	constructor (config) {

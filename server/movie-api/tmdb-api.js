@@ -1,11 +1,11 @@
 const _ = require('lodash')
 const rq = require('request-promise')
 
-class TmdbService {
+class TmdbApi {
 	constructor (config) {
-		this.apiKey = config.tmdb.apiKey
-		this.apiVersion = config.tmdb.apiVersion
-		this.baseUrl = config.tmdb.baseUrl
+		this.apiKey = config.movieApi.tmdb.apiKey
+		this.apiVersion = config.movieApi.tmdb.apiVersion
+		this.baseUrl = config.movieApi.tmdb.baseUrl
 	}
 
 	_getApiUrl (queryString, attributes) {
@@ -51,7 +51,7 @@ class TmdbService {
 			}
 
 			// Other errors
-			console.log('error: tmdb service: error getting data', filmTitle)
+			console.log('error: tmdb api: error getting data', filmTitle)
 			console.log(filmTitle)
 			console.log(err)
 			return {}
@@ -93,5 +93,5 @@ class TmdbService {
 }
 
 module.exports = (config) => {
-	return new TmdbService(config)
+	return new TmdbApi(config)
 }
